@@ -316,9 +316,27 @@ public class WorkerManager implements Function {
             }
         }
     }
-    public void ClearFile()
+    public void ClearFile(String Password)
     {
+        Frame frame = new JFrame("职工信息管理系统");
+        ((JFrame) frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        String password = JOptionPane.showInputDialog(frame,"请输入密码");
+        if(password.equals(Password))
+        {
+            try (FileWriter fileWriter = new FileWriter(FilePath,false))
+            {
+                WorkerArray.clear();
+                JOptionPane.showMessageDialog(frame,"文件清空成功！");
+            }catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(frame,"密码错误！");
+        }
     }
 
     @Override

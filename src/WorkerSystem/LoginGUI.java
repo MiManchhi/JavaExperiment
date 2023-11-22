@@ -13,6 +13,7 @@ public class LoginGUI extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
+    private String Password;
 
     public LoginGUI() {
         setTitle("登录");
@@ -29,6 +30,7 @@ public class LoginGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
+                LoginGUI.this.Password = password;
 
                 if (authenticate()) {
                     JOptionPane.showMessageDialog(LoginGUI.this, "登录成功");
@@ -68,6 +70,10 @@ public class LoginGUI extends JFrame {
         }
     }
 
+    public String GetPassword()
+    {
+        return this.Password;
+    }
     public JButton getLoginButton()
     {
         return loginButton;

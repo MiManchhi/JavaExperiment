@@ -97,7 +97,7 @@ public class WorkerSystem {
                         button7.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                wm.ClearFile();
+                                wm.ClearFile(loginGUI.GetPassword());
                             }
                         });
                         //退出管理程序

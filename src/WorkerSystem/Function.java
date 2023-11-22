@@ -7,5 +7,5 @@ public interface Function {
     void SearchWorker();
     void ShowWorker();
     void SortWorker();
-    void ClearFile();
+    void ClearFile(String Password);
 }

@@ -180,7 +180,7 @@ public class test implements Function {
         }
         return index;
     }
-    public void ClearFile()
+    public void ClearFile(String Password)
     {
 
     }
