@@ -1,11 +1,14 @@
 package WorkerManager;
 
 import WorkerSystem.Function;
+import WorkerSystem.IDComparaator2;
+import WorkerSystem.IDComparator;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class WorkerManager implements Function {
     public WorkerManager()
@@ -216,7 +219,7 @@ public class WorkerManager implements Function {
             else
             {
                 // 创建新的窗口来显示职工信息
-                JFrame infoFrame = new JFrame("职工信息");
+                JFrame infoFrame = new JFrame("找到员工");
                 infoFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
                 // 创建文本区域来显示职工信息
                 JTextArea infoTextArea = new JTextArea(10, 40);
@@ -241,7 +244,7 @@ public class WorkerManager implements Function {
             else
             {
                 // 创建新的窗口来显示职工信息
-                JFrame infoFrame = new JFrame("职工信息");
+                JFrame infoFrame = new JFrame("找到员工");
                 infoFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
                 // 创建文本区域来显示职工信息
                 JTextArea infoTextArea = new JTextArea(10, 40);
@@ -260,7 +263,58 @@ public class WorkerManager implements Function {
 
     public void SortWorker()
     {
+        Frame frame = new JFrame("职工信息管理系统");
+        ((JFrame) frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        IDComparator mycompare = new IDComparator();
+        IDComparaator2 mycompare2 = new IDComparaator2();
+        while(true) {
+            int select = Integer.parseInt(JOptionPane.showInputDialog(frame, "请选择排序规则：\n" + "1.降序\n" + "2.升序"));
+            if(select == 1)
+            {
+                Collections.sort(WorkerArray,mycompare2);  //降序
+                // 创建新的窗口来显示职工信息
+                JFrame infoFrame = new JFrame("排序成功！");
+                infoFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                // 创建文本区域来显示职工信息
+                JTextArea infoTextArea = new JTextArea(10, 40);
+                infoTextArea.setEditable(false); // 设置为不可编辑
+                JScrollPane infoScrollPane = new JScrollPane(infoTextArea);
+                // 添加文本区域到新窗口
+                infoFrame.add(infoScrollPane);
+                infoFrame.setSize(400, 300); // 设置新窗口大小
+                // 在新窗口中显示职工信息
+                for(int i = 0;i<WorkerArray.size();i++) {
+                    infoTextArea.append(this.WorkerArray.get(i).Showinfo() + "\n");
+                }
+                // 设置新窗口可见
+                infoFrame.setVisible(true);
+                break;
+            }
+            else if (select == 2) {
+                Collections.sort(WorkerArray,mycompare);  //升序
+                // 创建新的窗口来显示职工信息
+                JFrame infoFrame = new JFrame("排序成功！");
+                infoFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                // 创建文本区域来显示职工信息
+                JTextArea infoTextArea = new JTextArea(10, 40);
+                infoTextArea.setEditable(false); // 设置为不可编辑
+                JScrollPane infoScrollPane = new JScrollPane(infoTextArea);
+                // 添加文本区域到新窗口
+                infoFrame.add(infoScrollPane);
+                infoFrame.setSize(400, 300); // 设置新窗口大小
+                // 在新窗口中显示职工信息
+                for(int i = 0;i<WorkerArray.size();i++) {
+                    infoTextArea.append(this.WorkerArray.get(i).Showinfo() + "\n");
+                }
+                // 设置新窗口可见
+                infoFrame.setVisible(true);
+                break;
+            }
+            else if(select != 1&&select != 2){
+                JOptionPane.showMessageDialog(frame,"输入错误，请重新输入！");
+            }
+        }
     }
     public void ClearFile()
     {
@@ -305,6 +359,7 @@ public class WorkerManager implements Function {
             }
         }
         return index;
+
     }
     public int Find(int ID)
     {
