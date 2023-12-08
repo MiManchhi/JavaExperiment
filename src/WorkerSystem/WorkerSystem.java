@@ -22,6 +22,7 @@ public class WorkerSystem {
                         //创建窗口
                         JFrame frame = new JFrame("职工信息管理系统");
                         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
                         // 创建一个面板，并设置GridLayout
                         JPanel panel = new JPanel();
                         GridLayout gridLayout = new GridLayout(0, 1); // 单列网格布局，垂直排列
@@ -50,6 +51,8 @@ public class WorkerSystem {
                         frame.setSize(300, 600);
                         //显示窗口
                         frame.setVisible(true);
+                        //中间显示
+                        frame.setLocationRelativeTo(null);
                         //处理事件
                         //增加职工信息
                         button1.addActionListener(new ActionListener() {

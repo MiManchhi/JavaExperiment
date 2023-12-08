@@ -7,87 +7,72 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
-public class LoginGUI extends JFrame {
+public class RegisterGUI extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
-    private JButton loginButton;
-    private String Password;
+    private JButton registerButton;
 
-    public LoginGUI() {
-        setTitle("登录");
+    public RegisterGUI() {
+        setTitle("注册");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 150);
         setLayout(new GridLayout(3, 2));
-        //中间显示
+        //置中显示
         setLocationRelativeTo(null);
 
         usernameField = new JTextField(20);
         passwordField = new JPasswordField(20);
-        loginButton = new JButton("登录");
+        registerButton = new JButton("注册");
 
-        loginButton.addActionListener(new ActionListener() {
+        registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
-                LoginGUI.this.Password = password;
 
-                if (authenticate()) {
-                    JOptionPane.showMessageDialog(LoginGUI.this, "登录成功");
+                if (register()) {
+                    JOptionPane.showMessageDialog(RegisterGUI.this, "注册成功");
                 } else {
-                    JOptionPane.showMessageDialog(LoginGUI.this, "登录失败");
+                    JOptionPane.showMessageDialog(RegisterGUI.this, "注册失败，请重试");
                 }
             }
         });
-        //添加标签
+
         add(new JLabel("用户名:"));
-        //将文本框添加到窗口
         add(usernameField);
         add(new JLabel("密码:"));
         add(passwordField);
         add(new JLabel(""));
-        add(loginButton);
+        add(registerButton);
     }
 
-    public boolean authenticate() {
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
-
+    public boolean register() {
         String jdbcUrl = "jdbc:mysql://localhost:3306/javaexperiment";
         String dbUsername = "root";
         String dbPassword = "123456";
 
-        //创建连接，执行查询语句
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
-            String sql = "SELECT * FROM login_info WHERE username = ? AND password = ?";
-            //预处理指令
+            String sql = "INSERT INTO login_info (username, password) VALUES (?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
-            //设置用户名
             statement.setString(1, username);
-            //设置密码
             statement.setString(2, password);
-            //执行，获取结果
-            ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
+
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public String GetPassword()
-    {
-        return this.Password;
-    }
-    public JButton getLoginButton()
-    {
-        return loginButton;
-    }
-   /* public static void main(String[] args) {
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LoginGUI loginGUI = new LoginGUI();
-            loginGUI.setVisible(true);
+            RegisterGUI registerGUI = new RegisterGUI();
+            registerGUI.setVisible(true);
         });
-    }*/
+    }
 }
