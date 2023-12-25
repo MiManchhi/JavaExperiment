@@ -15,10 +15,9 @@ public class RegisterGUI extends JFrame {
 
     public RegisterGUI() {
         setTitle("注册");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // 关闭当前窗口，而不是退出整个应用
         setSize(300, 150);
         setLayout(new GridLayout(3, 2));
-        //置中显示
         setLocationRelativeTo(null);
 
         usernameField = new JTextField(20);
@@ -31,10 +30,10 @@ public class RegisterGUI extends JFrame {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
 
-                if (register()) {
+                if (register(username, password)) {
                     JOptionPane.showMessageDialog(RegisterGUI.this, "注册成功");
                 } else {
-                    JOptionPane.showMessageDialog(RegisterGUI.this, "注册失败，请重试");
+                    JOptionPane.showMessageDialog(RegisterGUI.this, "注册失败");
                 }
             }
         });
@@ -47,32 +46,21 @@ public class RegisterGUI extends JFrame {
         add(registerButton);
     }
 
-    public boolean register() {
+    private boolean register(String username, String password) {
         String jdbcUrl = "jdbc:mysql://localhost:3306/javaexperiment";
         String dbUsername = "root";
         String dbPassword = "123456";
-
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
             String sql = "INSERT INTO login_info (username, password) VALUES (?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, username);
             statement.setString(2, password);
-
-            int affectedRows = statement.executeUpdate();
-            return affectedRows > 0;
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            RegisterGUI registerGUI = new RegisterGUI();
-            registerGUI.setVisible(true);
-        });
     }
 }

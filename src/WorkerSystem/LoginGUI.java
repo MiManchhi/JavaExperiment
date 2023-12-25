@@ -13,6 +13,7 @@ public class LoginGUI extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
+    private JButton registerButton;
     private String Password;
 
     public LoginGUI() {
@@ -20,12 +21,12 @@ public class LoginGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 150);
         setLayout(new GridLayout(3, 2));
-        //中间显示
         setLocationRelativeTo(null);
 
         usernameField = new JTextField(20);
         passwordField = new JPasswordField(20);
         loginButton = new JButton("登录");
+        registerButton = new JButton("注册");
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -34,19 +35,27 @@ public class LoginGUI extends JFrame {
                 LoginGUI.this.Password = password;
 
                 if (authenticate()) {
-                    JOptionPane.showMessageDialog(LoginGUI.this, "登录成功");
+                    // JOptionPane.showMessageDialog(LoginGUI.this, "登录成功");
                 } else {
                     JOptionPane.showMessageDialog(LoginGUI.this, "登录失败");
                 }
             }
         });
-        //添加标签
+
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 创建并显示注册界面
+                //setVisible(false);
+                new RegisterGUI().setVisible(true);
+            }
+        });
+
         add(new JLabel("用户名:"));
-        //将文本框添加到窗口
         add(usernameField);
         add(new JLabel("密码:"));
         add(passwordField);
-        add(new JLabel(""));
+        add(registerButton);
         add(loginButton);
     }
 
@@ -58,16 +67,11 @@ public class LoginGUI extends JFrame {
         String dbUsername = "root";
         String dbPassword = "123456";
 
-        //创建连接，执行查询语句
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
             String sql = "SELECT * FROM login_info WHERE username = ? AND password = ?";
-            //预处理指令
             PreparedStatement statement = connection.prepareStatement(sql);
-            //设置用户名
             statement.setString(1, username);
-            //设置密码
             statement.setString(2, password);
-            //执行，获取结果
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (Exception e) {
@@ -76,18 +80,11 @@ public class LoginGUI extends JFrame {
         }
     }
 
-    public String GetPassword()
-    {
+    public String GetPassword() {
         return this.Password;
     }
-    public JButton getLoginButton()
-    {
+
+    public JButton getLoginButton() {
         return loginButton;
     }
-   /* public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LoginGUI loginGUI = new LoginGUI();
-            loginGUI.setVisible(true);
-        });
-    }*/
 }

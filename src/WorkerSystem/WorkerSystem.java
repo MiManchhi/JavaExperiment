@@ -6,9 +6,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
-import java.io.*;
 
-public class WorkerSystem {
+public class WorkerSystem extends JFrame{
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             LoginGUI loginGUI = new LoginGUI();
