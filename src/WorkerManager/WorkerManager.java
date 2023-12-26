@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class WorkerManager implements Function {
     public WorkerManager()
@@ -109,34 +110,35 @@ public class WorkerManager implements Function {
             String department = (String) departmentComboBox.getSelectedItem();
             Double salary = Double.parseDouble(salaryField.getText());
             // 在这里可以进行进一步处理，比如调用添加逻辑
-            if ("经理".equals(position)) {
-                Worker worker = new Manager(name, department, age, id,gender,position,salary);
-                WorkerArray.add(worker);
-            } else if ("技术人员".equals(position)) {
-                Worker worker = new TechnicalWorker(name, department, age, id,gender,position,salary);
-                WorkerArray.add(worker);
-            } else if ("销售人员".equals(position)) {
-                Worker worker = new Salesperson(name, department, age, id,gender,position,salary);
-                WorkerArray.add(worker);
-            } else if("销售经理".equals(position)){
-                Worker worker = new SalesManager(name, department, age, id,gender,position,salary);
-                WorkerArray.add(worker);
-            }
-            try(BufferedWriter writer = new BufferedWriter(new FileWriter(this.FilePath)))
-            {
-                for(int i = 0;i<WorkerArray.size();i++)
-                {
-                    writer.write(WorkerArray.get(i).Writerinfo());
-                    writer.newLine();
+            int temp = Find(id);
+            if(temp != -1) {
+                if ("经理".equals(position)) {
+                    Worker worker = new Manager(name, department, age, id, gender, position, salary);
+                    WorkerArray.add(worker);
+                } else if ("技术人员".equals(position)) {
+                    Worker worker = new TechnicalWorker(name, department, age, id, gender, position, salary);
+                    WorkerArray.add(worker);
+                } else if ("销售人员".equals(position)) {
+                    Worker worker = new Salesperson(name, department, age, id, gender, position, salary);
+                    WorkerArray.add(worker);
+                } else if ("销售经理".equals(position)) {
+                    Worker worker = new SalesManager(name, department, age, id, gender, position, salary);
+                    WorkerArray.add(worker);
                 }
-                writer.close();
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.FilePath))) {
+                    for (int i = 0; i < WorkerArray.size(); i++) {
+                        writer.write(WorkerArray.get(i).Writerinfo());
+                        writer.newLine();
+                    }
+                    writer.close();
+                } catch (IOException a) {
+                    JOptionPane.showMessageDialog(frame, "文件写入错误" + a.getMessage());
+                }
+                JOptionPane.showMessageDialog(frame, "添加成功！");
+                this.WorkerIsEmploy = false;
+            }else{
+                JOptionPane.showMessageDialog(null,"编号已存在，添加失败！");
             }
-            catch(IOException a)
-            {
-                JOptionPane.showMessageDialog(frame,"文件写入错误"+a.getMessage());
-            }
-            JOptionPane.showMessageDialog(frame, "添加成功！");
-            this.WorkerIsEmploy = false;
         }
     }
     public void DeleteWorker()
@@ -285,7 +287,10 @@ public class WorkerManager implements Function {
                     infoFrame.add(infoScrollPane);
                     infoFrame.setSize(400, 300); // 设置新窗口大小
                     // 在新窗口中显示职工信息
-                    infoTextArea.append(this.WorkerArray.get(Find(Name)).Showinfo() + "\n");
+                    List<Integer> temp = AllFind(Name);
+                    for(int i = 0;i<temp.size();i++) {
+                        infoTextArea.append(this.WorkerArray.get(temp.get(i)).Showinfo() + "\n");
+                    }
                     // 设置新窗口可见
                     infoFrame.setVisible(true);
                 }
@@ -428,6 +433,18 @@ public class WorkerManager implements Function {
 
     public String FilePath = "D:\\JavaIDEA\\Java-projects\\WorkerSystem\\src\\WorkerSystem\\Worker.txt";
 
+    public List<Integer> AllFind(String name)
+    {
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0;i<WorkerArray.size();i++)
+        {
+            if(WorkerArray.get(i).Name.equals(name))
+            {
+                indices.add(i);
+            }
+        }
+        return indices;
+    }
 
     public int Find(String name)
     {
@@ -441,7 +458,6 @@ public class WorkerManager implements Function {
             }
         }
         return index;
-
     }
     public int Find(int ID)
     {
